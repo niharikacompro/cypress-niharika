@@ -1,9 +1,30 @@
 
 import { SignupPage } from "./pages/SignupPage";
+import { MailsacPage } from "./pages/MailsacPage";
 const signupPage = new SignupPage();
+const mailsacPage = new MailsacPage();
+
 
 
 describe('Login Functionality', () => {
+  let teacher_email,
+  password,
+  env,
+  code;
+  before("Loading data", () => {
+    env = Cypress.env("prod");
+   cy.log("evviornment:"+ env);
+    code = env.code;
+    cy.log("Code: " + code);
+   
+    cy.generateRandomEmail(code, "teach_").then((res) => {
+      teacher_email = res;
+      cy.log("Teacher: " + teacher_email);
+    });
+  
+    password = "Compro11";
+   
+  });
  it.only("signup functionality for teacher",()=>{
   cy.visit("https://micro-nemo.comprodls.com/home", {
     headers: {
@@ -14,8 +35,14 @@ describe('Login Functionality', () => {
   });
 
     cy.get('a[href="/regoptions"]').click();
-    signupPage.signupUser("Teacher","mailsac3@gmail.com","Compro11");
-    cy.wait(20000);
+    signupPage.signupUser("Teacher",teacher_email,password);
+    cy.wait(4000);
+    cy.visit("https://mailsac.com/login");
+    
+      mailsacPage.verifyEmail(teacher_email);
+   
+   
+    cy.wait(2000);
   
 
      })

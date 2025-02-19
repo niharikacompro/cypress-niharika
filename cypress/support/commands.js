@@ -23,3 +23,23 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("removeDomainName", (email) => {
+    const atIndex = email.indexOf("@");
+    if (atIndex !== -1) {
+      const username = email.substring(0, atIndex);
+      return username;
+    } else {
+      return email;
+    }
+  });
+Cypress.Commands.add("generateRandomEmail", (code, user) => {
+    return new Promise((res) => {
+      const prefix = "cqa";
+      const domain = "mailsac.com";
+      const randomString = Math.random().toString(36).substring(2, 6);
+      const email = `${prefix}${code}${user}${randomString}@${domain}`;
+  
+      res(email);
+    });
+  });
+  
